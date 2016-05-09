@@ -50,24 +50,24 @@ public class APIUtility {
                                      boolean doRetry) throws IOException {
 
         AccountManager accountManager = AccountManager.get(context);
-        String idToken;
+        String accessToken;
 
-        // Try retrieving an ID token from the account manager. The boolean true in the invocation
+        // Try retrieving an access token from the account manager. The boolean true in the invocation
         // tells Android to show a notification if the token can't be retrieved. When the
         // notification is selected, it will launch the intent for re-authorisation. You could
         // launch it automatically here if you wanted to by grabbing the intent from the bundle.
         try {
             AccountManagerFuture<Bundle> futureManager = accountManager.getAuthToken(account,
-                    Authenticator.TOKEN_TYPE_ID, null, true, null, null);
+                    Authenticator.TOKEN_TYPE_ACCESS, null, true, null, null);
 
-            idToken = futureManager.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+            accessToken = futureManager.getResult().getString(AccountManager.KEY_AUTHTOKEN);
         } catch (Exception e) {
             throw new IOException("Could not get ID token from account.", e);
         }
 
         // Prepare an API request using the token
         HttpRequest request = new HttpRequest(url, method);
-        request = OIDCUtils.prepareApiRequest(request, idToken);
+        request = OIDCUtils.prepareApiRequest(request, accessToken);
 
         if (request.ok()) {
             return request.body();
@@ -77,7 +77,7 @@ public class APIUtility {
             if (doRetry && (code == HTTP_UNAUTHORIZED || code == HTTP_FORBIDDEN)) {
                 // We're being denied access on the first try, let's renew the token and retry
                 String accountType = context.getString(R.string.ACCOUNT_TYPE);
-                accountManager.invalidateAuthToken(accountType, idToken);
+                accountManager.invalidateAuthToken(accountType, accessToken);
 
                 return makeRequest(context, method, url, account, false);
             } else {

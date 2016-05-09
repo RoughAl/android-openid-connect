@@ -12,12 +12,13 @@ public final class Config {
 
     // TODO: Add the information you received from your OIDC provider below.
 
-    public static final String clientId = "foobar";
-    public static final String clientSecret = "xyzzy";
+    public static final String clientId = "android-app-1";
+    public static final String clientSecret = "d37bddda-f6a2-4d31-8077-480d3cb2c559";
 
-    public static final String authorizationServerUrl = "https://www.example.com/oauth2/authorize";
-    public static final String tokenServerUrl = "https://www.example.com/oauth2/token";
-    public static final String userInfoUrl = "https://www.example.com/oauth2/userinfo";
+    //Note android emulator host can be reached via 10.0.2.2 for default emulator
+    public static final String authorizationServerUrl = "http://10.0.2.2:8081/auth/realms/master/protocol/openid-connect/auth";
+    public static final String tokenServerUrl = "http://10.0.2.2:8081/auth/realms/master/protocol/openid-connect/token";
+    public static final String userInfoUrl = "http://10.0.2.2:8081/auth/realms/master/protocol/openid-connect/userinfo";
 
     // This URL doesn't really have a use with native apps and basically just signifies the end
     // of the authorisation process. It doesn't have to be a real URL, but it does have to be the
@@ -40,6 +41,6 @@ public final class Config {
     // The authorization flow type that determine the response_type authorization request should use.
     // One of the supported flows AuthorizationCode, Implicit or Hybrid.
     // For more info see http://openid.net/specs/openid-connect-core-1_0.html#Authentication
-    public static final Flows flowType = Flows.Hybrid;
+    public static final Flows flowType = Flows.AuthorizationCode; // KEYCLOAK specifc -> Hybrid flow not supported yet.
 
 }
