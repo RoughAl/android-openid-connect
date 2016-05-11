@@ -15,14 +15,25 @@
         android:id="@+id/loginButton"
         android:onClick="doLogin"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/deleteAccountButton"
+        android:layout_alignEnd="@+id/deleteAccountButton"
         android:padding="10pt"
         android:fontFamily="sans-serif-condensed"
         android:background="@android:color/holo_orange_light"
         android:textColor="@android:color/white"
         android:textAllCaps="true"
-        android:layout_centerInParent="true"
         android:textStyle="bold" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Account"
+        android:id="@+id/deleteAccountButton"
+        android:onClick="doDeleteAccount"
+        android:layout_above="@+id/loginButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ProgressBar
         android:layout_width="wrap_content"
