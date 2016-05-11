@@ -12,13 +12,13 @@ public final class Config {
 
     // TODO: Add the information you received from your OIDC provider below.
 
-    public static final String clientId = "android-app-1";
-    public static final String clientSecret = "f6314dfa-9d80-4a8e-b3ef-467684898125";
+    public static final String clientId = "sandboxy";
+    public static final String clientSecret = "43eb7e7f-2f1d-4bf9-99d9-0559f6c7be72";
 
     //Note android emulator host can be reached via 10.0.2.2 for default emulator
-    public static final String authorizationServerUrl = "http://10.0.2.2:8081/auth/realms/master/protocol/openid-connect/auth";
-    public static final String tokenServerUrl = "http://10.0.2.2:8081/auth/realms/master/protocol/openid-connect/token";
-    public static final String userInfoUrl = "http://10.0.2.2:8081/auth/realms/master/protocol/openid-connect/userinfo";
+    public static final String authorizationServerUrl = "http://10.0.2.2:8082/auth/realms/eurodata-test/protocol/openid-connect/auth";
+    public static final String tokenServerUrl = "http://10.0.2.2:8082/auth/realms/eurodata-test/protocol/openid-connect/token";
+    public static final String userInfoUrl = "http://10.0.2.2:8082/auth/realms/eurodata-test/protocol/openid-connect/userinfo";
 
     // This URL doesn't really have a use with native apps and basically just signifies the end
     // of the authorisation process. It doesn't have to be a real URL, but it does have to be the
