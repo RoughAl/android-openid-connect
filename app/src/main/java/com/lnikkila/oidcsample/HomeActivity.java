@@ -9,7 +9,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -37,6 +39,8 @@ public class HomeActivity extends Activity {
     private TextView txtUserEmail;
 
     private LinearLayout userInfoLayout;
+
+    private static final String TAG = HomeActivity.class.getSimpleName();
 
     private Button loginButton;
     private ProgressBar progressBar;
@@ -111,6 +115,62 @@ public class HomeActivity extends Activity {
                                 })
                         .create()
                         .show();
+        }
+    }
+
+    public void doDeleteAccount(final View view) throws IOException {
+
+        AccountManager accountManager = AccountManager.get(HomeActivity.this);
+        String accountType = HomeActivity.this.getString(R.string.ACCOUNT_TYPE);
+        Account[] accountsByType = accountManager.getAccountsByType(accountType);
+
+        new DeleteAccountTask().execute(accountsByType);
+
+
+        loginButton.setText(this.getText(R.string.loginButtonText));
+    }
+
+    private class DeleteAccountTask extends AsyncTask<Account, Void, Map> {
+
+        @Override
+        protected Map doInBackground(Account... accounts) {
+
+
+            // Try retrieving an access token from the account manager. The boolean true in the invocation
+            // tells Android to show a notification if the token can't be retrieved. When the
+            // notification is selected, it will launch the intent for re-authorisation. You could
+            // launch it automatically here if you wanted to by grabbing the intent from the bundle.
+            try {
+
+                for (Account account : accounts) {
+
+                    CookieManager.getInstance().removeAllCookies(null);
+
+                    //RESET refresh token to force re-authentication
+                    accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_ID, "");
+                    accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_ACCESS, "");
+                    accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_REFRESH, "");
+
+                    accountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
+                        @Override
+                        public void run(AccountManagerFuture<Boolean> result) {
+                            try {
+                                // Get the authenticator result, it is blocking until the
+                                // account authenticator completes
+                                Log.d(TAG, String.format("Account deleted: %s", result.getResult()));
+                            } catch (Exception e) {
+                                Log.e(TAG, "Exception during account deletion: ", e);
+                            }
+                        }
+                    }, null);
+//                assertTrue("Impossible to delete existing account for this application", removeAccountFuture.getResult(1, TimeUnit.SECONDS));
+                }
+            } catch (Exception e) {
+//             throw new IOException("Could not get ID token from account.", e);
+                Log.e(TAG, "Could not delete account", e);
+            }
+
+            return null;
         }
     }
 
