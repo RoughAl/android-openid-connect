@@ -2,44 +2,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".HomeActivity">
 
-    <Button
+
+    <LinearLayout
+        android:id="@+id/userInfoLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/loginButtonText"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/txtUserId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txtUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txtUserFirstname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txtUserLastname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txtUserEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <Button
         android:id="@+id/loginButton"
-        android:onClick="doLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/deleteAccountButton"
         android:layout_alignEnd="@+id/deleteAccountButton"
-        android:padding="10pt"
         android:fontFamily="sans-serif-condensed"
-        android:background="@android:color/holo_orange_light"
-        android:textColor="@android:color/white"
+        android:onClick="doLogin"
+        android:padding="10pt"
+        android:text="@string/loginButtonText"
         android:textAllCaps="true"
+        android:textColor="@android:color/white"
         android:textStyle="bold" />
+
+
     <Button
+        android:id="@+id/deleteAccountButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete Account"
-        android:id="@+id/deleteAccountButton"
-        android:onClick="doDeleteAccount"
         android:layout_above="@+id/loginButton"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+
+        android:onClick="doDeleteAccount"
+        android:text="Delete Account"
+        android:visibility="invisible"
+
+        android:textColor="@android:color/white"
+        android:fontFamily="sans-serif-condensed"
+        android:textAllCaps="true"
+        android:textStyle="bold"/>
 
     <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
         android:layout_centerInParent="true"
         android:indeterminate="true" />
-
 </RelativeLayout>
