@@ -13,7 +13,7 @@ public final class Config {
     // TODO: Add the information you received from your OIDC provider below.
 
     public static final String clientId = "android-app-1";
-    public static final String clientSecret = "d37bddda-f6a2-4d31-8077-480d3cb2c559";
+    public static final String clientSecret = "f6314dfa-9d80-4a8e-b3ef-467684898125";
 
     //Note android emulator host can be reached via 10.0.2.2 for default emulator
     public static final String authorizationServerUrl = "http://10.0.2.2:8081/auth/realms/master/protocol/openid-connect/auth";

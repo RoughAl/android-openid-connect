@@ -12,9 +12,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.lnikkila.oidcsample.oidc.authenticator.Authenticator;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.Map;
@@ -25,6 +29,14 @@ import java.util.Map;
  * @author Leo Nikkilä
  */
 public class HomeActivity extends Activity {
+
+    private TextView txtUserId;
+    private TextView txtUsername;
+    private TextView txtUserFirstname;
+    private TextView txtUserLastname;
+    private TextView txtUserEmail;
+
+    private LinearLayout userInfoLayout;
 
     private Button loginButton;
     private ProgressBar progressBar;
@@ -37,6 +49,14 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
 
         loginButton = (Button) findViewById(R.id.loginButton);
+
+        txtUserId = (TextView) findViewById(R.id.txtUserId);
+        txtUsername = (TextView) findViewById(R.id.txtUsername);
+        txtUserFirstname = (TextView) findViewById(R.id.txtUserFirstname);
+        txtUserLastname = (TextView) findViewById(R.id.txtUserLastname);
+        txtUserEmail = (TextView) findViewById(R.id.txtUserEmail);
+        userInfoLayout = (LinearLayout)findViewById(R.id.userInfoLayout);
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -127,8 +147,22 @@ public class HomeActivity extends Activity {
 
             if (result == null) {
                 loginButton.setText("Couldn't get user info");
+                userInfoLayout.setVisibility(View.GONE);
             } else {
+
                 loginButton.setText("Logged in as " + result.get("preferred_username"));
+
+                String accountType = getString(R.string.ACCOUNT_TYPE);
+                Account availableAccounts[] = accountManager.getAccountsByType(accountType);
+
+                Account account = availableAccounts[0];
+
+                txtUserId.setText(accountManager.getUserData(account, "userinfo.userid"));
+                txtUsername.setText(accountManager.getUserData(account, "userinfo.username"));
+                txtUserFirstname.setText(accountManager.getUserData(account, "userinfo.firstname"));
+                txtUserLastname.setText(accountManager.getUserData(account, "userinfo.lastname"));
+                txtUserEmail.setText(accountManager.getUserData(account, "userinfo.email"));
+                userInfoLayout.setVisibility(View.VISIBLE);
             }
         }
 

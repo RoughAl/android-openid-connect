@@ -15,6 +15,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.google.api.client.auth.openidconnect.IdToken;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 import com.google.api.client.json.gson.GsonFactory;
 import com.lnikkila.oidcsample.Config;
@@ -354,8 +355,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         String accountName = getString(R.string.app_name);
         String accountId = null;
 
+        IdToken.Payload payload = null;
         try {
-            accountId = response.parseIdToken().getPayload().getSubject();
+            payload = response.parseIdToken().getPayload();
+            accountId = payload.getSubject();
         } catch (IOException e) {
             Log.e(TAG, "Could not get ID Token subject.");
             e.printStackTrace();
@@ -371,12 +374,31 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             e.printStackTrace();
         }
 
+        Bundle userData = new Bundle();
+
+        userData.putString("userinfo.userid", payload.getSubject());
+
         if (userInfo.containsKey("preferred_username")) {
             accountName = (String) userInfo.get("preferred_username");
+            userData.putString("userinfo.username",accountName);
         }
 
         account = new Account(String.format("%s (%s)", accountName, accountId), accountType);
-        accountManager.addAccountExplicitly(account, null, null);
+
+
+        if (userInfo.containsKey("given_name")) {
+            userData.putString("userinfo.firstname", (String)payload.get("given_name"));
+        }
+
+        if (userInfo.containsKey("family_name")) {
+            userData.putString("userinfo.lastname", (String) payload.get("family_name"));
+        }
+
+        if (userInfo.containsKey("email")) {
+            userData.putString("userinfo.email", (String) payload.get("email"));
+        }
+
+        accountManager.addAccountExplicitly(account, null, userData);
 
         // Store the tokens in the account
         setTokens(response);
