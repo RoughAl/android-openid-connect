@@ -41,11 +41,15 @@ public class HomeActivity extends Activity {
     private LinearLayout userInfoLayout;
 
     private static final String TAG = HomeActivity.class.getSimpleName();
+    
+    private LinearLayout userInfoLayout;
 
     private Button loginButton;
+    private Button deleteAccountButton;
     private ProgressBar progressBar;
 
     private AccountManager accountManager;
+    private static final String TAG = HomeActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +57,21 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
 
         loginButton = (Button) findViewById(R.id.loginButton);
+        deleteAccountButton = (Button) findViewById(R.id.deleteAccountButton);
 
         txtUserId = (TextView) findViewById(R.id.txtUserId);
         txtUsername = (TextView) findViewById(R.id.txtUsername);
         txtUserFirstname = (TextView) findViewById(R.id.txtUserFirstname);
         txtUserLastname = (TextView) findViewById(R.id.txtUserLastname);
         txtUserEmail = (TextView) findViewById(R.id.txtUserEmail);
-        userInfoLayout = (LinearLayout)findViewById(R.id.userInfoLayout);
+        userInfoLayout = (LinearLayout) findViewById(R.id.userInfoLayout);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
         accountManager = AccountManager.get(this);
+
+
     }
 
     /**
@@ -118,62 +125,6 @@ public class HomeActivity extends Activity {
         }
     }
 
-    public void doDeleteAccount(final View view) throws IOException {
-
-        AccountManager accountManager = AccountManager.get(HomeActivity.this);
-        String accountType = HomeActivity.this.getString(R.string.ACCOUNT_TYPE);
-        Account[] accountsByType = accountManager.getAccountsByType(accountType);
-
-        new DeleteAccountTask().execute(accountsByType);
-
-
-        loginButton.setText(this.getText(R.string.loginButtonText));
-    }
-
-    private class DeleteAccountTask extends AsyncTask<Account, Void, Map> {
-
-        @Override
-        protected Map doInBackground(Account... accounts) {
-
-
-            // Try retrieving an access token from the account manager. The boolean true in the invocation
-            // tells Android to show a notification if the token can't be retrieved. When the
-            // notification is selected, it will launch the intent for re-authorisation. You could
-            // launch it automatically here if you wanted to by grabbing the intent from the bundle.
-            try {
-
-                for (Account account : accounts) {
-
-                    CookieManager.getInstance().removeAllCookies(null);
-
-                    //RESET refresh token to force re-authentication
-                    accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_ID, "");
-                    accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_ACCESS, "");
-                    accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_REFRESH, "");
-
-                    accountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
-                        @Override
-                        public void run(AccountManagerFuture<Boolean> result) {
-                            try {
-                                // Get the authenticator result, it is blocking until the
-                                // account authenticator completes
-                                Log.d(TAG, String.format("Account deleted: %s", result.getResult()));
-                            } catch (Exception e) {
-                                Log.e(TAG, "Exception during account deletion: ", e);
-                            }
-                        }
-                    }, null);
-//                assertTrue("Impossible to delete existing account for this application", removeAccountFuture.getResult(1, TimeUnit.SECONDS));
-                }
-            } catch (Exception e) {
-//             throw new IOException("Could not get ID token from account.", e);
-                Log.e(TAG, "Could not delete account", e);
-            }
-
-            return null;
-        }
-    }
-
     private class ApiTask extends AsyncTask<Account, Void, Map> {
 
         @Override
@@ -223,8 +174,75 @@ public class HomeActivity extends Activity {
                 txtUserLastname.setText(accountManager.getUserData(account, "userinfo.lastname"));
                 txtUserEmail.setText(accountManager.getUserData(account, "userinfo.email"));
                 userInfoLayout.setVisibility(View.VISIBLE);
+
+                deleteAccountButton.setVisibility(View.VISIBLE);
             }
         }
 
     }
-}
+
+    public void doDeleteAccount(final View view) throws IOException {
+
+        AccountManager accountManager = AccountManager.get(HomeActivity.this);
+        String accountType = HomeActivity.this.getString(R.string.ACCOUNT_TYPE);
+        Account[] accountsByType = accountManager.getAccountsByType(accountType);
+
+        new DeleteAccountTask().execute(accountsByType);
+
+        // reset text
+        loginButton.setText(this.getText(R.string.loginButtonText));
+
+        txtUserId.setText("");
+        txtUsername.setText("");
+        txtUserEmail.setText("");
+
+        txtUserFirstname.setText("");
+        txtUserLastname.setText("");
+
+        deleteAccountButton.setVisibility(View.INVISIBLE);
+
+    }
+
+    private class DeleteAccountTask extends AsyncTask<Account, Void, Map> {
+
+        @Override
+        protected Map doInBackground(Account... accounts) {
+
+
+            // Try retrieving an access token from the account manager. The boolean true in the invocation
+            // tells Android to show a notification if the token can't be retrieved. When the
+            // notification is selected, it will launch the intent for re-authorisation. You could
+            // launch it automatically here if you wanted to by grabbing the intent from the bundle.
+            try {
+
+                for (Account account : accounts) {
+
+                    CookieManager.getInstance().removeAllCookies(null);
+
+                    //RESET refresh token to force re-authentication
+                    accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_ID, "");
+                    accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_ACCESS, "");
+                    accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_REFRESH, "");
+
+                    accountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
+                        @Override
+                        public void run(AccountManagerFuture<Boolean> result) {
+                            try {
+                                // Get the authenticator result, it is blocking until the
+                                // account authenticator completes
+                                Log.d(TAG, String.format("Account deleted: %s", result.getResult()));
+                            } catch (Exception e) {
+                                Log.e(TAG, "Exception during account deletion: ", e);
+                            }
+                        }
+                    }, null);
+//                assertTrue("Impossible to delete existing account for this application", removeAccountFuture.getResult(1, TimeUnit.SECONDS));
+                }
+            } catch (Exception e) {
+//             throw new IOException("Could not get ID token from account.", e);
+                Log.e(TAG, "Could not delete account", e);
+            }
+
+            return null;
+        }
+    }
