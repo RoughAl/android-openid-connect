@@ -42,10 +42,6 @@ public class HomeActivity extends Activity {
 
     private LinearLayout userInfoLayout;
 
-    private static final String TAG = HomeActivity.class.getSimpleName();
-    
-    private LinearLayout userInfoLayout;
-
     private Button loginButton;
     private Button deleteAccountButton;
     private ProgressBar progressBar;
@@ -264,3 +260,4 @@ public class HomeActivity extends Activity {
             return null;
         }
     }
+}
