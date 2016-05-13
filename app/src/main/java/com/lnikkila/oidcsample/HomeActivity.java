@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lnikkila.oidcsample.oidc.authenticator.Authenticator;
 
@@ -51,6 +53,8 @@ public class HomeActivity extends Activity {
     private AccountManager accountManager;
     private static final String TAG = HomeActivity.class.getSimpleName();
 
+    private boolean autoLoginEnabled=true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +75,15 @@ public class HomeActivity extends Activity {
 
         accountManager = AccountManager.get(this);
 
+        ActionBar actionBar = getActionBar();
+        actionBar.setLogo(R.mipmap.ic_launcher);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
 
+        if (autoLoginEnabled)
+        {
+            doLogin(loginButton);
+        }
     }
 
     /**
@@ -159,9 +171,12 @@ public class HomeActivity extends Activity {
             if (result == null) {
                 loginButton.setText("Couldn't get user info");
                 userInfoLayout.setVisibility(View.GONE);
+                deleteAccountButton.setVisibility(View.VISIBLE);
             } else {
 
                 loginButton.setText("Logged in as " + result.get("preferred_username"));
+                Toast toast = Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT);
+                toast.show();
 
                 String accountType = getString(R.string.ACCOUNT_TYPE);
                 Account availableAccounts[] = accountManager.getAccountsByType(accountType);
@@ -231,6 +246,9 @@ public class HomeActivity extends Activity {
                                 // Get the authenticator result, it is blocking until the
                                 // account authenticator completes
                                 Log.d(TAG, String.format("Account deleted: %s", result.getResult()));
+                                Toast toast = Toast.makeText(getApplicationContext(), "Account deleted successfully", Toast.LENGTH_SHORT);
+                                toast.show();
+
                             } catch (Exception e) {
                                 Log.e(TAG, "Exception during account deletion: ", e);
                             }

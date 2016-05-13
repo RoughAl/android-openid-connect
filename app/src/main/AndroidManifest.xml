@@ -10,7 +10,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -22,7 +22,7 @@
         </activity>
         <activity
             android:name="com.lnikkila.oidcsample.oidc.authenticator.AuthenticatorActivity"
-            android:theme="@android:style/Theme.Holo.NoActionBar" >
+            android:theme="@android:style/Theme.Material.Light" >
         </activity>
 
         <service android:name="com.lnikkila.oidcsample.oidc.authenticator.AuthenticatorService">

@@ -17,27 +17,39 @@
         <TextView
             android:id="@+id/txtUserId"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="7pt"/>
+
 
         <TextView
             android:id="@+id/txtUsername"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="10pt"/>
 
-        <TextView
-            android:id="@+id/txtUserFirstname"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/txtUserLastname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txtUserFirstname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10pt"
+                android:layout_marginRight="4dp"/>
+
+            <TextView
+                android:id="@+id/txtUserLastname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10pt"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/txtUserEmail"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="10pt"/>
 
     </LinearLayout>
 
@@ -51,13 +63,10 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/deleteAccountButton"
         android:layout_alignEnd="@+id/deleteAccountButton"
-        android:fontFamily="sans-serif-condensed"
-        android:onClick="doLogin"
         android:padding="10pt"
+        android:textSize="9pt"
         android:text="@string/loginButtonText"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
+        android:onClick="doLogin"/>
 
 
     <Button
@@ -68,14 +77,12 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
 
+        android:padding="10pt"
+        android:textSize="9pt"
+
         android:onClick="doDeleteAccount"
         android:text="Delete Account"
-        android:visibility="invisible"
-
-        android:textColor="@android:color/white"
-        android:fontFamily="sans-serif-condensed"
-        android:textAllCaps="true"
-        android:textStyle="bold"/>
+        android:visibility="invisible"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
